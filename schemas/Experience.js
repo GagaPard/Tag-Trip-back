@@ -94,4 +94,4 @@ const ExperienceSchema = new mongoose.SchemaType({
     }]
 }, { timestamps : true })
 
-module.exports = mongoose.model('Experience', ExperienceSchema)
+module.exports = ExperienceSchema

@@ -9,4 +9,4 @@
     }
  }, { timestamps : true})
 
- module.exports = mongoose.model('ExperienceCategory', ExperienceCategorySchema)
+ module.exports = ExperienceCategorySchema

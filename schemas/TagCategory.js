@@ -10,4 +10,4 @@ const TagCategorySchema = new mongoose.Schema({
     } 
 }, { timestamps: true })
 
-module.exports = mongoose.model('TagCategory', TagCategorySchema)
+module.exports = TagCategorySchema

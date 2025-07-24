@@ -32,4 +32,4 @@ const TripSchema = new mongoose.Schema({
     }
 },{ timestamps: true }) 
 
-module.exports = mongoose.model('Trip', TripSchema)
+module.exports = TripSchema
