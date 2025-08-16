@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
+const fs = require('fs')
+const path = require('path')
+const Review = require('./Review')
 
-const ExperienceSchema = new mongoose.SchemaType({
+const ExperienceSchema = new mongoose.Schema({
     name : {
         type : String,
         required : true,
@@ -11,8 +14,9 @@ const ExperienceSchema = new mongoose.SchemaType({
         ref : 'User'
     },
     experienceCategory : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'ExperienceCategory'
+        type : String,
+        required : true,
+        enum : ['Restaurant', 'Activité', 'Hébergement']
     },
     tags : [{
         type : mongoose.Schema.Types.ObjectId,
@@ -90,8 +94,34 @@ const ExperienceSchema = new mongoose.SchemaType({
         required : true
     },
     reviews : [{
-        type : mongoose.Schema.Types.ObjectId
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Review'
     }]
-}, { timestamps : true })
+}, { strict: 'throw', timestamps : true })
 
-module.exports = ExperienceSchema
+//Hook pour supprimer tout ce qui est lié aux expériences
+ExperienceSchema.pre('findOneAndDelete', async function (next) {
+    const experience = await this.model.findOne(this.getFilter())
+    if (!experience) return next()
+
+    console.log(`Deleting experience: ${experience.name}`)
+
+    // Supprimer toutes les reviews de l'expérience
+    await Review.deleteMany({ experience: experience._id })
+
+    //Supprimer les photos de l'expérience
+    if (Array.isArray(experience.pictures)) {
+        experience.pictures.forEach(picture => {
+            const filePath = path.join(__dirname, '..', 'uploads', 'experiences', picture)
+            fs.unlink(filePath, (err) => {
+                if (err && err.code !== 'ENOENT') {
+                    console.error(`Can't delete picture "${picture}" of the experience: ${err.message}`)
+                }
+            })
+        })
+    }
+
+    next()
+})
+
+module.exports = mongoose.model('Experience', ExperienceSchema)

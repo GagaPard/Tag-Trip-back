@@ -8,6 +8,6 @@ const TagCategorySchema = new mongoose.Schema({
         unique : true,
         enum : ['Culture', 'Restauration', 'Hébergement', 'Paysages', 'Activités', 'Accessibilité']
     } 
-}, { timestamps: true })
+}, { strict: 'throw', timestamps: true })
 
 module.exports = TagCategorySchema

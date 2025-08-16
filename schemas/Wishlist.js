@@ -9,6 +9,6 @@ const WishlistSchema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : 'User'
     }
-},{ timestamps: true })
+},{ strict: 'throw', timestamps: true })
 
 module.exports = WishlistSchema

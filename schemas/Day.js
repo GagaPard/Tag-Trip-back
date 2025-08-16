@@ -6,14 +6,10 @@ const DaySchema = new mongoose.Schema({
         required : true,
         unique : true
     },
-    trip : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'Trip'
-    },
     experiences : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : 'Experience'
     }],
-}, { timestamps: true })
+}, { strict: 'throw', timestamps: true })
 
 module.exports = DaySchema
